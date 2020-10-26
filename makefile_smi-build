@@ -15,7 +15,7 @@
 # make all    	Build and publish a server image.
 # make build  	Build the server image.
 # make test   	Run tests against the built server.
-# make publish  Build the server, a server image and push the image to an image registry.
+# make deploy   Build the server, a server image and push the image to an image registry.
 # make clean	Remove build output, build image and server images.
 #
 # Notes:
@@ -33,20 +33,18 @@
 #	                 smi-build:tag \
 #					 "make build"
 
-DOCKER_REGISTRY=registry.keyporttech.com
-
-BUILD_IMAGE=smi-build
-BUILD_IMAGE_VERSION=0.1.0
+DOCKER_REGISTRY=keyporttech
 
 SERVER_IMAGE=smi-server
 SERVER_IMAGE_VERSION=0.1.2
 
+PEGASUS_GIT_REPOSITORY=git@github.com:KSchopmeyer/OpenPegasus.git
 
 SHELL=/bin/bash
 
+
 .ONESHELL:
 .PHONY: all build test publish clean
-
 
 # Top-level build targets
 all: build \
@@ -56,14 +54,14 @@ build: clone-repository \
 	   build-server \
 	   test-server
 
-publish: build \
-		 docker-build-server-image \
-		 docker-push-server-image
+deploy: build \
+		docker-build-server-image \
+		docker-push-server-image
 
 test: test-server
 
 clean: clean-build \ 
-	   docker-clean-images
+	   docker-remove-server-images
 
 # Subtargets for build
 clone-repository:
@@ -124,14 +122,6 @@ clean-build:
 	@echo "Cleaning the build..."
 	make clobber
 	make clean
-
-docker-clean-images: docker-remove-server-images \
-			  		 docker-remove-build-image
-
-docker-remove-build-image:
-	@echo "Removing build image..."
-	
-	docker rmi ${DOCKER_REGISTRY}/${BUILD_IMAGE}:${BUILD_IMAGE_VERSION}
 
 docker-remove-server-images:
 	@echo "Removing server images..."

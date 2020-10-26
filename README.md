@@ -14,10 +14,20 @@ The following must be present prior to building images.
 Building the SMI Server image is a two step process which first requires building the build image and then the server image.  Building the build image can be skipped though if you choose to use one of the published images.
 
 ### How to Build the SMI Build Image
-To build the docker image for building the SMI Server image the following command line must be executed.
+To build the docker image for building the SMI Server image first set the image version in the version.txt file.  Next execute the following build command.
 
 ```console
-sudo docker build -t smi-build:tag .
+make build
+```
+This will lint the Dockerfile and then build the image provided no linting errors were found.
+
+The SMI Build makefile supports the following targets.
+
+```
+make lint     Lint the Dockerfile.
+make build    Build the build image.
+make deploy   Deploy, push the build image to an image registry.
+make clean    Remove the build image from the local machine.
 ```
 
 ### How to Build the SMI Server Image
