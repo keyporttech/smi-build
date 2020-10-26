@@ -1,24 +1,30 @@
 ######## Start builder #######
 FROM ubuntu:20.04
 
+# Ignore DL3002: Last user should not be root.
+# hadolint ignore=DL3002
 USER root
 
 # Required so that pipes work properly in the Dockerfile
 SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 
 # Package installations
+# Ignore DL3008: Pin versions in apt-get install.
+# hadolint ignore=DL3008
 RUN apt-get update && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
     ack-grep \
     build-essential \
     git \
     curl \
     docker.io \
     libssl-dev \
-    vim
+    openssh-client \
+    vim \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Pegasus release file and key paths
-ENV PEGASUS_GIT_REPOSITORY=git@github.com:KSchopmeyer/OpenPegasus.git
+# Pegasus file paths
 ENV PEGASUS_SMI_ROOT=/root/smi
 ENV PEGASUS_HOME=${PEGASUS_SMI_ROOT}/home
 ENV PEGASUS_ROOT=${PEGASUS_SMI_ROOT}/OpenPegasus/pegasus
@@ -27,7 +33,7 @@ ENV PEGASUS_ROOT=${PEGASUS_SMI_ROOT}/OpenPegasus/pegasus
 RUN mkdir -p ${PEGASUS_HOME} && \
     mkdir -p /root/.ssh
 
-# Build settings (Debug is currently required for successful building)
+# Build settings (Debug and Non-SSL is currently required for build success)
 # Settings below that are flags, with values set to true, enable the action
 # simply through the existance of the variable.  The variables value has no
 # effect.
@@ -41,7 +47,7 @@ ENV PEGASUS_ENABLE_EXECQUERY=true
 ENV OPENSSL=/usr
 
 # Add files for building the server image
-COPY ./makefile ${PEGASUS_SMI_ROOT}
+COPY ./makefile_smi-build ${PEGASUS_SMI_ROOT}/makefile
 COPY ./Dockerfile_smi-server ${PEGASUS_SMI_ROOT}/Dockerfile
 
 # Build folder
