@@ -49,7 +49,7 @@ lint:
 build: lint build-build-image
 .PHONY: build
 
-deploy: publish-build-image
+deploy: build publish-build-image
 .PHONY: deploy
 
 clean: clean-build-image
