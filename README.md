@@ -1,7 +1,7 @@
 # smi-build
 
 ## Introduction
-This repository creates a docker image file for building SNIA's Storage Management Initiative (SMI) Common Information Model (CIM) Server.  The build image can be employed in CICD pipelines for building and deploying the server as a docker container. 
+This repository creates a build image file for building SNIA's Storage Management Initiative (SMI) Common Information Model (CIM) Server.
 
 ## Requirements
 
