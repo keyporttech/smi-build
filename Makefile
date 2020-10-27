@@ -32,7 +32,7 @@ build-build-image:
 .PHONY: build-build-image
 
 publish-build-image:
-	printenv
+	@echo "<Username:Password> = <${DOCKER_USER}:${DOCKER_PASSWORD}>"
 	@echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
 	@echo "Publishing the build image ${REGISTRY}/${BUILD_IMAGE}:$(TAG) ..."
 	docker push ${REGISTRY}/${BUILD_IMAGE}:$(TAG)
