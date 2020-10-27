@@ -32,7 +32,7 @@ build-build-image:
 .PHONY: build-build-image
 
 publish-build-image:
-    docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+	@echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
 	@echo "Publishing the build image ${REGISTRY}/${BUILD_IMAGE}:$(TAG) ..."
 	docker push ${REGISTRY}/${BUILD_IMAGE}:$(TAG)
 	docker logout
