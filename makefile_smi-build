@@ -60,7 +60,7 @@ deploy: build \
 
 test: test-server
 
-clean: clean-build \ 
+clean: clean-build \
 	   docker-remove-server-images
 
 # Subtargets for build
@@ -72,10 +72,10 @@ clone-repository:
 
 	@echo "Changing to SMI root directory..."
 	cd ${PEGASUS_SMI_ROOT}
-		
-	@echo "Cloning OpenPegasus under the SMI root directory..."
-	git clone ${PEGASUS_GIT_REPOSITORY}	
-	
+
+	@echo "Cloning OpenPegasus github repo under the SMI root directory..."
+	git clone ${PEGASUS_GIT_REPOSITORY}
+
 build-server:
 	@echo "Building the server using the build container..."
 
@@ -83,6 +83,7 @@ build-server:
 	cd ${PEGASUS_ROOT}
 
 	@echo "Building the server using the pegasus source..."
+	make clobber clean
 	make build
 
 test-server:
@@ -92,7 +93,38 @@ test-server:
 	cd ${PEGASUS_ROOT}
 
 	@echo "Testing the server build..."
+	make repository make testrepository
 	make tests
+
+reduce-server-files:
+	@echo "Remove the server unwanted files in the build container..."
+	@echo "Remove all test executables"
+	cd ${PEGASUS_HOME}
+	rm bin/Test*
+	@echo remove object files
+	rm -r obj
+	# remove any trace files
+	rm trace/*
+	# Remove unwanted schemas
+	# TODO: This assumes that CIM241 is the desired schema
+	# This can only be used if there is no correspondence to files on the
+	# host since it removes the files from the host also. Blocking for now
+	cd ${PEGASUS_ROOT}/Schemas
+	# rm -rdf CIM2131
+	# rm -rdf CIM217
+	# rm -rdf CIM222
+	# rm -rdf CIM225
+	# rm -rdf CIM228
+	# rm -rdf CIM231
+	# rm -rdf CIM236
+	# rm -rdf CIM25
+	# rm -rdf CIM29
+	# FUTURE: Remove all source files
+
+
+
+
+
 
 # Subtargets for publish
 docker-build-server-image:
@@ -103,7 +135,7 @@ docker-build-server-image:
 
 	@echo "Changing to SMI root directory..."
 	cd ${PEGASUS_SMI_ROOT}
-	
+
 	docker build --tag ${SERVER_IMAGE}:${SERVER_IMAGE_VERSION} .
 
 docker-push-server-image:
@@ -125,10 +157,9 @@ clean-build:
 
 docker-remove-server-images:
 	@echo "Removing server images..."
-	
+
 	@echo "Removing the repository tagged server image..."
 	docker rmi ${DOCKER_REGISTRY}/${SERVER_IMAGE}:${SERVER_IMAGE_VERSION}
 
 	@echo "Removing the server image..."
 	docker rmi ${SERVER_IMAGE}:${SERVER_IMAGE_VERSION}
-
