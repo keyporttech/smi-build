@@ -38,7 +38,8 @@ DOCKER_REGISTRY=keyporttech
 SERVER_IMAGE=smi-server
 SERVER_IMAGE_VERSION=0.1.2
 
-PEGASUS_GIT_REPOSITORY=git@github.com:OpenPegasus/OpenPegasus.git
+# Use http to clone repository because no authentication required
+PEGASUS_GIT_REPOSITORY=http://github.com/OpenPegasus/OpenPegasus.git
 
 SHELL=/bin/bash
 
@@ -70,10 +71,13 @@ clone-repository:
 	@echo "Listing the current environment path..."
 	@echo ${PATH}
 
-	@echo "Changing to SMI root directory..."
+	@ Set global git config to ignore certificate
+	git config --global http.sslverify false
+
+	@echo "Changing to SMI root directory ${PEGASUS_SMI_ROOT}"
 	cd ${PEGASUS_SMI_ROOT}
 
-	@echo "Cloning OpenPegasus github repo under the SMI root directory..."
+	@echo "Cloning OpenPegasus github repo under the SMI root directory ${PEGASUS_GIT_REPOSITORY}"
 	git clone ${PEGASUS_GIT_REPOSITORY}
 
 build-server:
