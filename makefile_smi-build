@@ -38,7 +38,7 @@ DOCKER_REGISTRY=keyporttech
 SERVER_IMAGE=smi-server
 SERVER_IMAGE_VERSION=0.1.2
 
-PEGASUS_GIT_REPOSITORY=git@github.com:KSchopmeyer/OpenPegasus.git
+PEGASUS_GIT_REPOSITORY=git@github.com:OpenPegasus/OpenPegasus.git
 
 SHELL=/bin/bash
 
