@@ -9,16 +9,19 @@ USER root
 SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 
 # Package installations
+# Includes packages for docker, OpenPegasus support packages, and
+# packages to support the development environment
 # Ignore DL3008: Pin versions in apt-get install.
 # hadolint ignore=DL3008
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    ack-grep \
+    docker.io \
     build-essential \
+    libssl-dev \
+    libpam0g \
+    ack-grep \
     git \
     curl \
-    docker.io \
-    libssl-dev \
     openssh-client \
     vim \
     && apt-get clean \
@@ -33,7 +36,7 @@ ENV PEGASUS_ROOT=${PEGASUS_SMI_ROOT}/OpenPegasus/pegasus
 RUN mkdir -p ${PEGASUS_HOME} && \
     mkdir -p /root/.ssh
 
-# Build settings (Debug and Non-SSL is currently required for build success)
+# Build settings (Debug is currently required for build success)
 # Settings below that are flags, with values set to true, enable the action
 # simply through the existance of the variable.  The variables value has no
 # effect.
@@ -41,7 +44,8 @@ ENV PEGASUS_PLATFORM=LINUX_X86_64_GNU
 ENV PEGASUS_DEBUG=true
 ENV PATH=${PEGASUS_HOME}/bin:$PATH
 ENV PEGASUS_USE_DEFAULT_MESSAGES=true
-#ENV PEGASUS_HAS_SSL=true
+ENV PEGASUS_HAS_SSL=true
+ENV PEGASUS_PAM_AUTHENTICATION=true
 ENV PEGASUS_CLIENT_TRACE_ENABLE=true
 ENV PEGASUS_ENABLE_EXECQUERY=true
 ENV OPENSSL=/usr
