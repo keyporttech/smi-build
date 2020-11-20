@@ -100,16 +100,20 @@ test-server:
 	make repository make testrepository
 	make tests
 
-reduce-server-files:
+remove-uneeded-components:
 	@echo "Remove the server unwanted files in the build container..."
+
 	@echo "Remove all test executables"
 	cd ${PEGASUS_HOME}
 	rm bin/Test*
+
 	@echo remove object files
 	rm -r obj
-	# remove any trace files
+
+	@echo remove any trace files
 	rm trace/*
-	# Remove unwanted schemas
+
+	@echo Remove unwanted schemas
 	# TODO: This assumes that CIM241 is the desired schema
 	# This can only be used if there is no correspondence to files on the
 	# host since it removes the files from the host also. Blocking for now
@@ -125,13 +129,9 @@ reduce-server-files:
 	# rm -rdf CIM29
 	# FUTURE: Remove all source files
 
-
-
-
-
-
 # Subtargets for publish
-docker-build-server-image:
+docker-build-server-image: remove-uneeded-components
+
 	@echo "Building the SMI Server image..."
 
 	@echo "Listing the current docker version..."
