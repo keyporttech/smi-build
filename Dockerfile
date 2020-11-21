@@ -11,6 +11,9 @@ SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 # Package installations
 # Includes packages for docker, OpenPegasus support packages, and
 # packages to support the development environment
+
+# Ignore DL3005 that disallows apt-get upgrade
+# hadolint ignore=DL3005
 # Ignore DL3008: Pin versions in apt-get install.
 # hadolint ignore=DL3008
 # NOTE: The upgrade is absolutely required for ubuntu 20.04 becase the
@@ -18,6 +21,9 @@ SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 # The libpam0g-dev may have different names under other linux distributions.
 # the --no-install-recommends significantly reduces docker image size
 
+# Ignore DL3005 that disallows apt-get upgrade
+# Ignore DL3008: Pin versions in apt-get install.
+# hadolint ignore=DL3005,DL3008
 RUN apt-get update && apt-get -y upgrade && \
     apt-get install -y --no-install-recommends \
     openssl \
