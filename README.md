@@ -31,7 +31,7 @@ make clean    Remove the build image from the local machine.
 ```
 
 ### How to Build the SMI Server Image
-Using the build image the server image can now be built.  Run the following command line. 
+Using the build image the server image can now be built.  Run the following command line.
 
 ```console
 sudo docker run -it --rm -v /home/<username>/.ssh:/root/.ssh -v /var/run/docker.sock:/var/run/docker.sock smi-build:tag /bin/bash
@@ -61,7 +61,7 @@ sudo docker run -it --rm -v /home/<username>/.ssh:/root/.ssh -v /var/run/docker.
 The container will terminate though after it finishes executing the specified command.
 
 To only build, test and create the server image run these commands in build image bash shell.
- 
+
 ```console
 make build
 make docker-build-server-image
@@ -82,8 +82,16 @@ peterlamanna/smi-build:0.1.0
 To run the server simply execute this command line.
 
 ```console
-sudo docker run -it --rm -p 127.0.0.1:5988:5988 smi-server:0.1.2 /bin/bash
+sudo docker run -it --rm -p 127.0.0.1:5988:5988 -p 127.0.0.1:5989:5989 smi-server:0.1.2 /bin/bash
 ```
+
+or to load the server image and start OpenPegasus when the server starts enter the run command
+without the last parameter ("/bin/bash")
+
+```console
+sudo docker run -it --rm -p 127.0.0.1:5988:5988 -p 127.0.0.1:5989:5989 smi-server:0.1.2
+```
+
 
 Again, the bash shell will have the SMI root directory as the current working directory.  From there you can execute any cimserver of cimcli command.  To start the server simply execute the following.
 
