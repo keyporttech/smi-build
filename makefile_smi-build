@@ -97,12 +97,14 @@ test-server:
 	cd ${PEGASUS_ROOT}
 
 	@echo "Testing the server build..."
-	make repository; make testrepository
+	make repository
+	make testrepository
 	make tests
 
 	# recreate after tests.  Note that we should actually clear the
 	# home directory of a number of items and leave just what is required
-	make repository; make testrepository
+	make repository
+	make testrepository
 
 remove-uneeded-components:
 	@echo "Remove the server unwanted files in the build container..."
