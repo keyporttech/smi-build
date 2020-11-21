@@ -13,12 +13,18 @@ SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 # packages to support the development environment
 # Ignore DL3008: Pin versions in apt-get install.
 # hadolint ignore=DL3008
-RUN apt-get update && \
+# NOTE: The upgrade is absolutely required for ubuntu 20.04 becase the
+# pam dev lib was left out of the original release.
+# The libpam0g-dev may have different names under other linux distributions.
+# the --no-install-recommends significantly reduces docker image size
+
+RUN apt-get update && apt-get -y upgrade && \
     apt-get install -y --no-install-recommends \
+    openssl \
     docker.io \
     build-essential \
     libssl-dev \
-    libpam0g \
+    libpam0g-dev \
     ack-grep \
     git \
     curl \
