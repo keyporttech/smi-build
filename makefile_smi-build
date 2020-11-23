@@ -106,6 +106,17 @@ test-server:
 	make repository
 	make testrepository
 
+provision-server:
+	@echo "Provision the server in build container..."
+
+
+	@echo "Create the repository..."
+	make repository
+
+	# TODO: This will become optional so that the user can create their
+	# specific repository extensions.
+	make testrepository
+
 remove-uneeded-components:
 	@echo "Remove the server unwanted files in the build container..."
 
@@ -117,7 +128,10 @@ remove-uneeded-components:
 	rm -r obj
 
 	@echo remove any trace files
-	rm trace/*
+	TRACEDIR="trace"
+	if [ -d "${TRACEDIR}" ]; then
+		rm ${TRACEDIR}/*
+	endif
 
 	@echo Remove unwanted schemas
 	# TODO: This assumes that CIM241 is the desired schema
@@ -151,8 +165,12 @@ docker-build-server-image: remove-uneeded-components
 docker-push-server-image:
 	@echo "Pushing the built SMI Server image to private image registry..."
 
+	docker logout
+	docker login -u $${DOCKER_USER} -p $${DOCKER_PASSWORD}
 	docker tag ${SERVER_IMAGE}:${SERVER_IMAGE_VERSION} ${DOCKER_REGISTRY}/${SERVER_IMAGE}:${SERVER_IMAGE_VERSION}
 	docker push ${DOCKER_REGISTRY}/${SERVER_IMAGE}:${SERVER_IMAGE_VERSION}
+	docker logout
+
 
 # Subtargets for clean
 clean-build:
@@ -169,6 +187,7 @@ docker-remove-server-images:
 	@echo "Removing server images..."
 
 	@echo "Removing the repository tagged server image..."
+
 	docker rmi ${DOCKER_REGISTRY}/${SERVER_IMAGE}:${SERVER_IMAGE_VERSION}
 
 	@echo "Removing the server image..."

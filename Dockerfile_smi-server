@@ -22,19 +22,23 @@ ENV PEGASUS_HOME=${PEGASUS_SMI_ROOT}/home
 # Create directory structure
 RUN mkdir -p ${PEGASUS_HOME}
 
-# Build settings (Debug is currently required for successful building)
+# Run settings
 # Settings below that are flags, with values set to true, enable the action
 # simply through the existance of the variable.  The variables value has no
-# effect.
-ENV PEGASUS_PLATFORM=LINUX_X86_64_GNU
-ENV PEGASUS_DEBUG=true
+# effect.  Note that there are almost NO environment variables to control
+# pegasus execution.  Excution variations are controled through the
+# config variables that can be viewed through the clienc cimconfig
+# and the web admin interface
+# TODO: remove the following after we confirm that they are not needed
+# ENV PEGASUS_DEBUG=true
+# ENV PEGASUS_PLATFORM=LINUX_X86_64_GNU
+# ENV PEGASUS_USE_DEFAULT_MESSAGES=true
+# ENV PEGASUS_HAS_SSL=true
+# ENV PEGASUS_CLIENT_TRACE_ENABLE=true
+# ENV PEGASUS_ENABLE_EXECQUERY=true
+# ENV PEGASUS_PAM_AUTHENTICATION=true
+# ENV OPENSSL=/usr
 ENV PATH=${PEGASUS_HOME}/bin:$PATH
-ENV PEGASUS_USE_DEFAULT_MESSAGES=true
-ENV PEGASUS_HAS_SSL=true
-ENV PEGASUS_CLIENT_TRACE_ENABLE=true
-ENV PEGASUS_ENABLE_EXECQUERY=true
-ENV PEGASUS_PAM_AUTHENTICATION=true
-ENV OPENSSL=/usr
 
 # Add makefile for using this build image
 COPY ./home ${PEGASUS_HOME}
